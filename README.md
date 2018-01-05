@@ -68,6 +68,41 @@ php project-stats.php -d ./app --exclude-files-ext=log,sql --exclude-files=**/.g
 php project-stats.php -d ./app --exclude-dirs=/var/www/project2 --exclude-files=./app/.gitignore
 ```
 
+Example of output
+```bash
+[INFO] Generating project stats...
+[HISTORY] Processing dir: ...
+[HISTORY] Processing file: ...
+...
+[INFO] Generation completed
+
+-------------------------------------------------------
+|                    PROJECT STATS                    |
+-------------------------------------------------------
+| > Directories                                  1079 |
+|                                                     |
+| Included dirs scanned                          1076 |
+| Skipped dirs (excluded)                           3 |
+-------------------------------------------------------
+| > Files                                       28028 |
+|                                                     |
+| Included files scanned                         3985 |
+| Skipped files (excluded)                      24043 |
+-------------------------------------------------------
+| > Lines                                      591557 |
+|                                                     |
+| Code lines scanned                           462312 |
+| Empty lines scanned                           74005 |
+| Comment lines scanned                         55240 |
+-------------------------------------------------------
+| > Sizes                                             |
+|                                                     |
+| Total chars                                56186478 |
+| Total size                                 56186478 |
+-------------------------------------------------------
+
+```
+
 
 
 
