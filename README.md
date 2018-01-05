@@ -1,13 +1,19 @@
 # Project Stats
 
-*Project stats is a PHP script scanning one or more target folder in order to display statistics. You can for instance use it to know the number of lines in a project, including for instance the number of comments*
+*Project stats is a PHP script scanning one or more target folders in order to display statistics. You can for instance use it to know the number of lines in a project, including for instance the number of comments*
 
 
 ## Table of Contents
 
-  1. [Documentation](#documentation)
+  1. [Documentation](#documentation)  
+    a. [CLI](#cli)  
+      1. [Usage](#usage)
+      1. [Options](#options)
+      1. [Examples](#examples)
   1. [Changelog](#changelog)
   1. [TODO](#todo)
+  1. [Contact](#contact)
+  1. [License](#license)
 
 
 ## Documentation
@@ -29,7 +35,10 @@ Set the target directory(ies)
 If present, display the script history   
 
 * *[optional]* `--exclude-dirs`
-If present, skip all directories with the specified names or paths (comma delimited list). When using the path mode this option format must match the regarding path in the `-d` option: if the path in `-d` is relative, exclude a relative path, if the path in `-d` is absolute, exclude an absolute path. In the case of multiple target paths with different format duplicate your excludes to match each target path format.   
+If present, skip all directories with the specified names or paths (comma delimited list). When using the path mode this 
+option format must match the corresponding path in the `-d` option: if the path in `-d` is relative, exclude a relative 
+path, if the path in `-d` is absolute, exclude an absolute path. In the case of multiple target paths with different 
+formats duplicate your excludes to match each target path format.   
  
 * *[optional]* `--exclude-files-ext`
 If present, skip all files with the specified extensions (comma delimited list)  
