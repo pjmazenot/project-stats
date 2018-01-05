@@ -20,6 +20,15 @@ final class ProjectStats {
 	/** @var array Target directory(ies) */
 	private $dir = [];
 
+	/** @var array Excluded files by extension */
+	private $excludedExt = [];
+
+	/** @var array Excluded files by name */
+	private $excludedFileNames = ['.DS_Store'];
+
+	/** @var array Excluded files by path */
+	private $excludedFilePaths = [];
+
 	/** @var array Excluded directories by name */
 	private $excludedDirNames = ['.git', 'node_modules', '.idea', '.nbproject'];
 
@@ -77,6 +86,28 @@ final class ProjectStats {
 		}
 		if(empty($this->dir)) {
 			$this->log('error', 'You need to include at least one directory');
+		}
+
+		// Set the excluded extensions
+		if(!empty($options['exclude-files-ext'])) {
+			$this->excludedExt = explode(',', $options['exclude-files-ext']);
+		}
+
+		// Set the excluded file names
+		if(!empty($options['exclude-files'])) {
+
+			$files = explode(',', $options['exclude-files']);
+
+			foreach($files as $excludedFile) {
+
+				if(strpos($excludedFile, '**/') === 0) {
+					$this->excludedFileNames[] = substr($excludedFile, 3);
+				} else {
+					$this->excludedFilePaths[] = $excludedFile;
+				}
+
+			}
+
 		}
 
 		// Set the excluded directories
@@ -187,6 +218,8 @@ final class ProjectStats {
 if(php_sapi_name() == 'cli') {
 
 	$options = getopt('hd:', [
+		'exclude-files::',
+		'exclude-files-ext::',
 		'exclude-dirs::',
 	]);
 	$options['run-from'] = 'cli';
