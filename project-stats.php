@@ -20,6 +20,12 @@ final class ProjectStats {
 	/** @var array Target directory(ies) */
 	private $dir = [];
 
+	/** @var array Excluded directories by name */
+	private $excludedDirNames = ['.git', 'node_modules', '.idea', '.nbproject'];
+
+	/** @var array Excluded directories by path */
+	private $excludedDirPaths = [];
+
 	/** @var bool Flag used to detect multi-line comments*/
 	private $commentStarted = false;
 
@@ -71,6 +77,23 @@ final class ProjectStats {
 		}
 		if(empty($this->dir)) {
 			$this->log('error', 'You need to include at least one directory');
+		}
+
+		// Set the excluded directories
+		if(!empty($options['exclude-dirs'])) {
+
+			$dirs = explode(',', $options['exclude-dirs']);
+
+			foreach($dirs as $excludedDir) {
+
+				if(strpos($excludedDir, '**/') === 0) {
+					$this->excludedDirNames[] = substr($excludedDir, 3);
+				} else {
+					$this->excludedDirPaths[] = $excludedDir;
+				}
+
+			}
+
 		}
 
 	}
@@ -163,7 +186,9 @@ final class ProjectStats {
 // CLI
 if(php_sapi_name() == 'cli') {
 
-	$options = getopt('hd:', []);
+	$options = getopt('hd:', [
+		'exclude-dirs::',
+	]);
 	$options['run-from'] = 'cli';
 	$projectStats = new ProjectStats($options);
 
