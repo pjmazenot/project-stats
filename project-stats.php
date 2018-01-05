@@ -130,6 +130,144 @@ final class ProjectStats {
 	}
 
 	/**
+	 * Generate project stats
+	 */
+	public function generateStats() {
+
+		$this->log('info', 'Generating project stats...');
+
+		foreach($this->dir as $dir) {
+			$this->processDir($dir);
+		}
+
+		$this->log('info', 'Generation completed');
+
+	}
+
+	/**
+	 * Process a directory
+	 *
+	 * @param string $dir Directory path
+	 */
+	private function processDir($dir) {
+
+		// Clean dir name
+		$dir = str_replace('//', '/', $dir);
+
+		// Check if the name is excluded
+		$dirName = basename($dir);
+		if(in_array($dirName, $this->excludedDirNames)) {
+
+			$this->log('history', 'Skipping dir: ' . $dir);
+			$this->stats['excluded-dirs']++;
+			return;
+
+		}
+
+		// Check if the path is excluded
+		foreach($this->excludedDirPaths as $excludedDirPath) {
+
+			if(preg_match('/' . preg_quote($excludedDirPath, '/') . '\/?$/', $dir)) {
+
+				$this->log('history', 'Skipping dir: ' . $dir);
+				$this->stats['excluded-dirs']++;
+				return;
+
+			}
+
+		}
+
+		// Else process the directory
+		if ($handle = opendir($dir)) {
+
+			$this->log('history', 'Processing dir: ' . $dir);
+			$this->stats['included-dirs']++;
+
+			while (($entry = readdir($handle)) !== false) {
+
+				// Skip current and parent folder
+				if ($entry == '.' || $entry == '..') {
+					continue;
+				}
+
+				// Process every folders and files in the current directory
+				if(is_dir($dir . '/' . $entry)) {
+					$this->processDir($dir . '/' . $entry);
+				} else {
+					$this->processFile($dir . '/' . $entry);
+				}
+
+			}
+
+			closedir($handle);
+
+		} else {
+			$this->log('warning', 'Unable to open dir: ' . $dir);
+		}
+
+	}
+
+	/**
+	 * Process a file
+	 *
+	 * @param string $file File path
+	 */
+	private function processFile($file) {
+
+		// Check if the extension is excluded
+		$ext = strrchr($file, '.');
+		if(!empty($ext) && in_array(substr($ext, 1), $this->excludedExt)) {
+
+			$this->log('history', 'Skipping file by extension: ' . $file);
+			$this->stats['excluded-files']++;
+			return;
+
+		}
+
+		// Check if the name is excluded
+		$fileName = basename($file);
+		if(in_array($fileName, $this->excludedFileNames)) {
+
+			$this->log('history', 'Skipping file by name: ' . $file);
+			$this->stats['excluded-files']++;
+			return;
+
+		}
+
+		// Check if the path is excluded
+		foreach($this->excludedFilePaths as $excludedFilePath) {
+
+			if(preg_match('/' . preg_quote($excludedFilePath, '/') . '$/', $file)) {
+
+				$this->log('history', 'Skipping file: ' . $file);
+				$this->stats['excluded-files']++;
+				return;
+
+			}
+
+		}
+
+		// Open the file in read mode
+		if ($handle = fopen($file, 'r')) {
+
+			$this->log('history', 'Processing file: ' . $file);
+			$this->stats['included-files']++;
+			$this->stats['size'] += filesize($file);
+
+			// Process every lines of the file
+			while (($line = fgets($handle)) !== false) {
+				$this->processLine($line);
+			}
+
+			fclose($handle);
+
+		} else {
+			$this->log('warning', 'Unable to open file: ' . $file);
+		}
+
+	}
+
+	/**
 	 * Process a line
 	 *
 	 * @param string $line Line content
@@ -224,6 +362,7 @@ if(php_sapi_name() == 'cli') {
 	]);
 	$options['run-from'] = 'cli';
 	$projectStats = new ProjectStats($options);
+	$projectStats->generateStats();
 
 } else {
 
