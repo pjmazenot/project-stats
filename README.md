@@ -49,27 +49,32 @@ If present, skip all files with the specified names or paths (comma delimited li
 #### Examples
 
 1. Scan the current folder, except the files with the **.log** extension
+
 ```bash
 php project-stats.php -d . --exclude-files-ext=log
 ```
 
 2. Scan the **/var/www** folder, except the **/var/www/project2** and **/var/www/project3** directories
+
 ```bash
 php project-stats.php -d . --exclude-dirs=/var/www/project2,/var/www/project3
 ```
 
 3. Scan the **app** folder (relative to the script), except the **.log** and **.sql** files and the files named **.gitignore**
+
 ```bash
 php project-stats.php -d ./app --exclude-files-ext=log,sql --exclude-files=**/.gitignore
 ```
 
 4. Scan the **app** and the **/var/www** folders, except the dir with the path **/var/www/project2** the file with the path **./app/.gitignore**
+
 ```bash
 php project-stats.php -d ./app --exclude-dirs=/var/www/project2 --exclude-files=./app/.gitignore
 ```
 
 Example of output
-```bash
+
+```
 [INFO] Generating project stats...
 [HISTORY] Processing dir: ...
 [HISTORY] Processing file: ...
@@ -102,9 +107,6 @@ Example of output
 -------------------------------------------------------
 
 ```
-
-
-
 
 ## Changelog
 
