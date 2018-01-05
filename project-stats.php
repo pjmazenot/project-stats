@@ -8,6 +8,22 @@
 
 /**
  * Class ProjectStats
+ *
+ * CLI Usage:
+ * php project-stats.php -d .
+ *      -h
+ *      --exclude-dirs=**[slash]dir_name,/var/www/dir_absolute,./dir_relative,C:/dir_windows
+ *      --exclude-files=**[slash]file_name,/var/www/file_absolute,./file_relative,C:/file_windows
+ *      --exclude-files-ext=ext1,ext2
+ *
+ * Options:
+ * -d                      [required] Specify the directory list to scan, delimited by a comma (e.g /var/www/dir_absolute,./dir_relative)
+ * -h                      [optional] Activate history output
+ * --exclude-dirs          [optional] List of directories to exclude, delimited by a comma
+ *                         The mask `**[slash]` can be used to specify a directory name (applicable at any level versus a specific path)
+ * --exclude-files         [optional] List of file names or paths to exclude, delimited by a comma
+ *                         The mask `**[slash]` can be used to specify a directory name
+ * --exclude-files-ext     [optional] List of extensions to exclude, delimited by a comma
  */
 final class ProjectStats {
 
@@ -403,5 +419,11 @@ if(php_sapi_name() == 'cli') {
 	$projectStats->renderStatsCli();
 
 } else {
+
+	echo 'Syntax: php project-stats.php -d "/var/www/target_dir_absolute,target_dir_relative,..."
+										[-h]
+	                                    [--exclude-dirs=**/global_dir,/var/www/dir_absolute,./dir_relative,...]
+	                                    [--exclude-files=**/global_file,name2,/var/www/file_absolute,./file_relative,...]
+	                                    [--exclude-files-ext=ext1,ext2,...]';
 
 }
