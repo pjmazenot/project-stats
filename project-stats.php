@@ -327,6 +327,43 @@ final class ProjectStats {
 	}
 
 	/**
+	 * Render the stats for the cli
+	 */
+	public function renderStatsCli() {
+
+		$totalDirectories = $this->stats['included-dirs'] + $this->stats['excluded-dirs'];
+		$totalFiles = $this->stats['included-files'] + $this->stats['excluded-files'];
+		$totalLines = $this->stats['code-lines'] + $this->stats['empty-lines'] + $this->stats['comment-lines'];
+
+		echo PHP_EOL;
+		echo '-------------------------------------------------------' . PHP_EOL;
+		echo '|                    PROJECT STATS                    |' . PHP_EOL;
+		echo '-------------------------------------------------------' . PHP_EOL;
+		echo '| > Directories             ' . str_repeat(' ', 25 - strlen($totalDirectories)) . $totalDirectories . ' |' . PHP_EOL;
+		echo '|                                                     |' . PHP_EOL;
+		echo '| Included dirs scanned     ' . str_repeat(' ', 25 - strlen($this->stats['included-dirs'])) . $this->stats['included-dirs'] . ' |' . PHP_EOL;
+		echo '| Skipped dirs (excluded)   ' . str_repeat(' ', 25 - strlen($this->stats['excluded-dirs'])) . $this->stats['excluded-dirs'] . ' |' . PHP_EOL;
+		echo '-------------------------------------------------------' . PHP_EOL;
+		echo '| > Files                   ' . str_repeat(' ', 25 - strlen($totalFiles)) . $totalFiles . ' |' . PHP_EOL;
+		echo '|                                                     |' . PHP_EOL;
+		echo '| Included files scanned    ' . str_repeat(' ', 25 - strlen($this->stats['included-files'])) . $this->stats['included-files'] . ' |' . PHP_EOL;
+		echo '| Skipped files (excluded)  ' . str_repeat(' ', 25 - strlen($this->stats['excluded-files'])) . $this->stats['excluded-files'] . ' |' . PHP_EOL;
+		echo '-------------------------------------------------------' . PHP_EOL;
+		echo '| > Lines                   ' . str_repeat(' ', 25 - strlen($totalLines)) . $totalLines . ' |' . PHP_EOL;
+		echo '|                                                     |' . PHP_EOL;
+		echo '| Code lines scanned        ' . str_repeat(' ', 25 - strlen($this->stats['code-lines'])) . $this->stats['code-lines'] . ' |' . PHP_EOL;
+		echo '| Empty lines scanned       ' . str_repeat(' ', 25 - strlen($this->stats['empty-lines'])) . $this->stats['empty-lines'] . ' |' . PHP_EOL;
+		echo '| Comment lines scanned     ' . str_repeat(' ', 25 - strlen($this->stats['comment-lines'])) . $this->stats['comment-lines'] . ' |' . PHP_EOL;
+		echo '-------------------------------------------------------' . PHP_EOL;
+		echo '| > Sizes                                             |' . PHP_EOL;
+		echo '|                                                     |' . PHP_EOL;
+		echo '| Total chars               ' . str_repeat(' ', 25 - strlen($this->stats['chars'])) . $this->stats['chars'] . ' |' . PHP_EOL;
+		echo '| Total size                ' . str_repeat(' ', 25 - strlen($this->stats['size'])) . $this->stats['size'] . ' |' . PHP_EOL;
+		echo '-------------------------------------------------------' . PHP_EOL;
+
+	}
+
+	/**
 	 * Log an message
 	 *
 	 * With the CLI if a message has the $level == "error" the process is stopped
@@ -363,6 +400,7 @@ if(php_sapi_name() == 'cli') {
 	$options['run-from'] = 'cli';
 	$projectStats = new ProjectStats($options);
 	$projectStats->generateStats();
+	$projectStats->renderStatsCli();
 
 } else {
 
