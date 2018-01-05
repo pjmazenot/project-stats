@@ -17,6 +17,9 @@ final class ProjectStats {
 	/** @var array Options */
 	private $options;
 
+	/** @var array Target directory(ies) */
+	private $dir = [];
+
 	/**
 	 * ProjectStats constructor.
 	 *
@@ -33,6 +36,26 @@ final class ProjectStats {
 
 		// Set options
 		$this->options = $options;
+
+		// Verify and set the target directories
+		if(!empty($options['d'])) {
+
+			$dirs = explode(',', $options['d']);
+
+			foreach($dirs as $dir) {
+
+				if(!is_dir($dir)) {
+					$this->log('warning', 'Dir ignored because not found: ' . $dir);
+				} else {
+					$this->dir[] = $dir;
+				}
+
+			}
+
+		}
+		if(empty($this->dir)) {
+			$this->log('error', 'You need to include at least one directory');
+		}
 
 	}
 
@@ -65,7 +88,7 @@ final class ProjectStats {
 // CLI
 if(php_sapi_name() == 'cli') {
 
-	$options = [];
+	$options = getopt('hd:', []);
 	$options['run-from'] = 'cli';
 	$projectStats = new ProjectStats($options);
 
